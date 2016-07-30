@@ -8,10 +8,10 @@ var url_parser = {
     regex: function(){
         var
             SCHEME = '(https?:\/\/)',
-            HOST = '([^\/ #"\\?&]+)',
-            PATH = '([^\\? #&"]+)?',
-            QUERY = '([\\?&][^ #"]+)?',
-            FRAGMENT = '(#[^ #"]*)?';
+            HOST = '([^ #"\\?&\n\t\/]+)',
+            PATH = '([^ #"\\?&\n\t]+)?',
+            QUERY = '([\\?&][^ #"\n\t]+)?',
+            FRAGMENT = '(#[^ #"\n\t]*)?';
         return new RegExp(SCHEME + HOST + PATH + QUERY + FRAGMENT, "ig");
     },
 
@@ -174,6 +174,7 @@ var url_parser = {
                 hash: hash,
                 query_params: url_parser.query_parse(qs)
             }
+            console.log(match);
             if(callback){
                 return callback(match, parts);
             }
