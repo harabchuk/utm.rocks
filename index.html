@@ -4,48 +4,105 @@ title: Bulk Utm Builder
 ---
 
 <script src="/js/utm_urls.js"></script>
+
+<!-- FORM -->
 <div class="row">
-  <div class="md-col-12">
+    <div class="col-md-6">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="utm_source" class="col-sm-2 control-label">Source&nbsp;*</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control query-param" id="utm_source" placeholder="referrer: google, binq, newsletter4">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="utm_medium" class="col-sm-2 control-label">Medium&nbsp; *</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control query-param" id="utm_medium" placeholder="marketing medium: cpc, banner, email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="utm_campaign" class="col-sm-2 control-label">Campaign&nbsp;*</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control query-param" id="utm_campaign" placeholder="product, promo code, or slogan">
+                </div>
+            </div>
 
-    <button class="btn btn-primary" id="bt_update">Update</button>
-
-    <!-- Tabs navigation -->
-    <ul class="nav nav-tabs">
-      <li role="presentation" class="active">
-          <a href="#input_tab" aria-controls="input_tab" role="tab" data-toggle="tab">
-              Input
-          </a>
-      </li>
-      <li role="presentation">
-          <a id="bt_tab_output" href="#output_tab" aria-controls="output_tab" role="tab" data-toggle="tab">
-            Output <span id="output_tab_ready" style="visibility: hidden; color: #e21700" class="glyphicon glyphicon-bell" aria-hidden="true"></span>
-          </a>
-      </li>
-    </ul>
-
-    <div class="tab-content" style="padding-top: 1em;">
-
-      <!-- Input Tab -->
-      <div role="tabpanel" class="tab-pane fade in active" id="input_tab">
-          <div class="form-group">
-            <textarea id="input_text" class="form-control" rows="20"></textarea>
-          </div>
-      </div>
-
-      <!-- Output Tab -->
-      <div role="tabpanel" class="tab-pane fade" id="output_tab">
-        <div class="form-group">
-          <textarea id="output_text" class="form-control" rows="20"></textarea>
-        </div>
-      </div>
-
+        </form>
     </div>
-  </div>
+    <div class="col-md-6">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="utm_term" class="col-sm-2 control-label">Term</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control query-param" id="utm_term" placeholder="identify the paid keywords">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="utm_content" class="col-sm-2 control-label">Content</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control query-param" id="utm_content" placeholder="use to differentiate ads">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- TABS -->
+<div class="row">
+    <div class="col-md-12">
+
+        <!-- Tabs navigation -->
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active">
+                <a href="#input_tab" aria-controls="input_tab" role="tab" data-toggle="tab">
+                    &nbsp; Input &nbsp;
+                </a>
+            </li>
+            <li role="presentation">
+                <a id="bt_tab_output" href="#output_tab" aria-controls="output_tab" role="tab" data-toggle="tab">
+                    &nbsp; Output <span id="output_tab_ready" style="visibility: hidden; color: #e21700" class="glyphicon glyphicon-bell" aria-hidden="true"></span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content" style="padding-top: 1em;">
+
+            <!-- Input Tab -->
+            <div role="tabpanel" class="tab-pane fade in active" id="input_tab">
+                <div class="form-group">
+                    <textarea id="input_text" class="form-control" rows="18"></textarea>
+                </div>
+
+                <button class="btn btn-primary" id="bt_update">Update URLs</button>
+
+            </div>
+
+            <!-- Output Tab -->
+            <div role="tabpanel" class="tab-pane fade" id="output_tab">
+                <div class="form-group">
+                    <textarea id="output_text" class="form-control" rows="18"></textarea>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <script>
+    function get_form_values(){
+        var query_params = [];
+        $('.query-param').each(function(){
+            var $this = $(this);
+            var val = $this.val().trim();
+            if(val)
+                query_params.push([$this.attr('id'), val]);
+        });
+        return query_params;
+    }
+
     function update_callback(match, parts){
-        url_parser.add_params(parts['query_params'], [['name','value']]);
+        url_parser.add_params(parts['query_params'], get_form_values());
         return url_parser.build_url(
                 parts['scheme'],
                 parts['host'],
@@ -67,11 +124,11 @@ title: Bulk Utm Builder
     }
 
     $(document).ready(function(){
-       $('#bt_update').on('click', function(){
+        $('#bt_update').on('click', function(){
             update_urls();
-       });
-       $('#bt_tab_output').on('click', function(){
-           new_data_alert(false);
-       });
+        });
+        $('#bt_tab_output').on('click', function(){
+            new_data_alert(false);
+        });
     });
 </script>
