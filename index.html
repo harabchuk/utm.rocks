@@ -3,13 +3,24 @@ layout: default
 title: Bulk Utm Builder
 ---
 
+<script src="/js/utm_urls.js"></script>
 <div class="row">
   <div class="md-col-12">
 
+    <button class="btn btn-primary" id="bt_update">Update</button>
+
     <!-- Tabs navigation -->
     <ul class="nav nav-tabs">
-      <li role="presentation" class="active"><a href="#input_tab" aria-controls="input_tab" role="tab" data-toggle="tab">Input</a></li>
-      <li role="presentation"><a href="#output_tab" aria-controls="output_tab" role="tab" data-toggle="tab">Output</a></li>
+      <li role="presentation" class="active">
+          <a href="#input_tab" aria-controls="input_tab" role="tab" data-toggle="tab">
+              Input
+          </a>
+      </li>
+      <li role="presentation">
+          <a id="bt_tab_output" href="#output_tab" aria-controls="output_tab" role="tab" data-toggle="tab">
+            Output <span id="output_tab_ready" style="visibility: hidden; color: #e21700" class="glyphicon glyphicon-bell" aria-hidden="true"></span>
+          </a>
+      </li>
     </ul>
 
     <div class="tab-content" style="padding-top: 1em;">
@@ -31,3 +42,36 @@ title: Bulk Utm Builder
     </div>
   </div>
 </div>
+
+<script>
+    function update_callback(match, parts){
+        url_parser.add_params(parts['query_params'], [['name','value']]);
+        return url_parser.build_url(
+                parts['scheme'],
+                parts['host'],
+                parts['path'],
+                parts['query_params'],
+                parts['hash']
+        );
+    }
+
+    function update_urls(){
+        var text = $('#input_text').val();
+        var result = url_parser.replace(text, update_callback);
+        $('#output_text').val(result);
+        new_data_alert(true);
+    }
+
+    function new_data_alert(show){
+        $('#output_tab_ready').css('visibility', show?'visible':'hidden');
+    }
+
+    $(document).ready(function(){
+       $('#bt_update').on('click', function(){
+            update_urls();
+       });
+       $('#bt_tab_output').on('click', function(){
+           new_data_alert(false);
+       });
+    });
+</script>
